@@ -16,6 +16,13 @@ include(helpers)
 
 add_library(${CMAKE_PROJECT_NAME} MODULE)
 
+# The OBS 30.1.2 dependency step installs only the Debug libobs/frontend import
+# libraries. Import libraries just point at obs.dll / obs-frontend-api.dll, so
+# release builds can safely link against them.
+foreach(_cfg RELEASE RELWITHDEBINFO MINSIZEREL)
+  set(CMAKE_MAP_IMPORTED_CONFIG_${_cfg} "${_cfg};Release;RelWithDebInfo;Debug")
+endforeach()
+
 set_target_properties(${CMAKE_PROJECT_NAME} PROPERTIES CXX_STANDARD 17 CXX_STANDARD_REQUIRED ON)
 
 find_package(libobs REQUIRED)
